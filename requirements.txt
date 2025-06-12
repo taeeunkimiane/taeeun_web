@@ -4,7 +4,6 @@ numpy
 pillow
 scikit-image
 plotly
-folium
 koreanize_matplotlib
 torch
 torchvision
