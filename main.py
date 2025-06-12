@@ -1,9 +1,9 @@
 import streamlit as st
-import optimization_hw
-import optimization_selflearning
-import optimization_vision
-import optimization_energy
-import optimization_memory
+from pages.optimization import optimization_hw
+from pages.optimization import optimization_selflearning
+from pages.optimization import optimization_vision
+from pages.optimization import optimization_energy
+from pages.optimization import optimization_memory
 
 st.set_page_config(page_title="로봇 최적화 시뮬레이터", layout="wide")
 
@@ -26,4 +26,3 @@ elif page == "4. 에너지 최적화":
     optimization_energy.run()
 elif page == "5. 메모리 최적화":
     optimization_memory.run()
-
