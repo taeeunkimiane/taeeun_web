@@ -24,7 +24,6 @@ def train_model(optimizer_name, lr, beta1, beta2, weight_decay, epochs=5):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model = SimpleMLP().to(device)
     criterion = nn.CrossEntropyLoss()
-
     optimizer_dict = {
         "SGD": optim.SGD(model.parameters(), lr=lr, weight_decay=weight_decay),
         "Adam": optim.Adam(model.parameters(), lr=lr, betas=(beta1, beta2), weight_decay=weight_decay),
@@ -33,8 +32,10 @@ def train_model(optimizer_name, lr, beta1, beta2, weight_decay, epochs=5):
     }
     optimizer = optimizer_dict[optimizer_name]
 
+    # ✅ MNIST → FakeData로 교체
+    from torchvision.datasets import FakeData
     transform = transforms.ToTensor()
-    train_data = datasets.MNIST(root="/home/appuser/.cache", train=True, download=True, transform=transform)
+    train_data = FakeData(size=1024, image_size=(1, 28, 28), num_classes=10, transform=transform)
     train_loader = DataLoader(train_data, batch_size=64, shuffle=True)
 
     loss_list = []
@@ -61,6 +62,7 @@ def train_model(optimizer_name, lr, beta1, beta2, weight_decay, epochs=5):
         acc_list.append(correct / total)
 
     return loss_list, acc_list
+
 
 # ✅ Streamlit 앱 함수
 def app():
