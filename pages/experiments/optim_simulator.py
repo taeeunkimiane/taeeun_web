@@ -1,17 +1,13 @@
-# ✅ 전체 통합 코드 (MNIST 사용 + 그래프 출력 + Streamlit UI)
 import streamlit as st
 import torch
 import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import DataLoader
-from torchvision import datasets, transforms
+from torchvision import transforms
+from torchvision.datasets import FakeData
 import plotly.graph_objs as go
 
-import streamlit as st
-
-st.set_page_config(page_title="최적화 시뮬레이터", layout="wide")
-
-# ✅ MLP 모델 정의
+# MLP 모델 정의
 class SimpleMLP(nn.Module):
     def __init__(self):
         super().__init__()
@@ -24,7 +20,7 @@ class SimpleMLP(nn.Module):
         x = self.relu(self.fc1(x))
         return self.fc2(x)
 
-# ✅ 학습 함수
+# 학습 함수 정의
 def train_model(optimizer_name, lr, beta1, beta2, weight_decay, epochs=5):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model = SimpleMLP().to(device)
@@ -38,9 +34,8 @@ def train_model(optimizer_name, lr, beta1, beta2, weight_decay, epochs=5):
     }
     optimizer = optimizer_dict[optimizer_name]
 
-    # ✅ 실제 MNIST 데이터 불러오기
     transform = transforms.ToTensor()
-    train_data = datasets.MNIST(root="./data", train=True, download=True, transform=transform)
+    train_data = FakeData(size=1024, image_size=(1, 28, 28), num_classes=10, transform=transform)
     train_loader = DataLoader(train_data, batch_size=64, shuffle=True)
 
     loss_list = []
@@ -69,7 +64,7 @@ def train_model(optimizer_name, lr, beta1, beta2, weight_decay, epochs=5):
 
     return loss_list, acc_list
 
-# ✅ Streamlit 앱 실행 함수
+# ✅ Streamlit 앱 함수
 def app():
     st.title("1️⃣ 최적화 알고리즘 시뮬레이터")
     st.markdown("PyTorch 기반 MLP 모델을 다양한 옵티마이저로 학습시키고, 손실 및 정확도 그래프를 비교합니다.")
@@ -89,7 +84,7 @@ def app():
         with st.spinner("모델 학습 중..."):
             loss, acc = train_model(optimizer_name, lr, beta1, beta2, weight_decay)
 
-        epochs = list(range(1, len(loss) + 1))
+        epochs = list(range(1, len(loss)+1))
 
         st.subheader("📉 Loss vs Epoch")
         fig1 = go.Figure()
