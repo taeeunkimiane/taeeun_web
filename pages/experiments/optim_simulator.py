@@ -2,11 +2,12 @@ import streamlit as st
 import torch
 import torch.nn as nn
 import torch.optim as optim
-from torchvision import datasets, transforms
 from torch.utils.data import DataLoader
+from torchvision import transforms
+from torchvision.datasets import FakeData
 import plotly.graph_objs as go
 
-# ✅ 간단한 MLP 모델 정의
+# MLP 모델 정의
 class SimpleMLP(nn.Module):
     def __init__(self):
         super().__init__()
@@ -19,11 +20,12 @@ class SimpleMLP(nn.Module):
         x = self.relu(self.fc1(x))
         return self.fc2(x)
 
-# ✅ 훈련 함수 정의
+# 학습 함수 정의
 def train_model(optimizer_name, lr, beta1, beta2, weight_decay, epochs=5):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model = SimpleMLP().to(device)
     criterion = nn.CrossEntropyLoss()
+
     optimizer_dict = {
         "SGD": optim.SGD(model.parameters(), lr=lr, weight_decay=weight_decay),
         "Adam": optim.Adam(model.parameters(), lr=lr, betas=(beta1, beta2), weight_decay=weight_decay),
@@ -32,14 +34,13 @@ def train_model(optimizer_name, lr, beta1, beta2, weight_decay, epochs=5):
     }
     optimizer = optimizer_dict[optimizer_name]
 
-    # ✅ MNIST → FakeData로 교체
-    from torchvision.datasets import FakeData
     transform = transforms.ToTensor()
     train_data = FakeData(size=1024, image_size=(1, 28, 28), num_classes=10, transform=transform)
     train_loader = DataLoader(train_data, batch_size=64, shuffle=True)
 
     loss_list = []
     acc_list = []
+
     for epoch in range(epochs):
         total_loss = 0
         correct = 0
@@ -63,19 +64,10 @@ def train_model(optimizer_name, lr, beta1, beta2, weight_decay, epochs=5):
 
     return loss_list, acc_list
 
-
 # ✅ Streamlit 앱 함수
 def app():
     st.title("1️⃣ 최적화 알고리즘 시뮬레이터")
-    st.markdown("""
-    PyTorch 기반 MLP 모델을 다양한 옵티마이저로 학습시키고, 손실 및 정확도 그래프를 비교합니다.
-    """)
-
-    # 세션 상태 초기화
-    if "loss" not in st.session_state:
-        st.session_state.loss = []
-    if "acc" not in st.session_state:
-        st.session_state.acc = []
+    st.markdown("PyTorch 기반 MLP 모델을 다양한 옵티마이저로 학습시키고, 손실 및 정확도 그래프를 비교합니다.")
 
     col1, col2 = st.columns(2)
     with col1:
@@ -88,31 +80,23 @@ def app():
     start = st.button("학습 시작")
     reset = st.button("리셋")
 
-    # 학습 시작
     if start:
         with st.spinner("모델 학습 중..."):
             loss, acc = train_model(optimizer_name, lr, beta1, beta2, weight_decay)
-        st.session_state.loss = loss
-        st.session_state.acc = acc
 
-    # 그래프 출력
-    if st.session_state.loss and st.session_state.acc:
-        epochs = list(range(1, len(st.session_state.loss) + 1))
+        epochs = list(range(1, len(loss)+1))
 
         st.subheader("📉 Loss vs Epoch")
         fig1 = go.Figure()
-        fig1.add_trace(go.Scatter(x=epochs, y=st.session_state.loss, mode="lines+markers", name="Loss"))
+        fig1.add_trace(go.Scatter(x=epochs, y=loss, mode="lines+markers", name="Loss"))
         fig1.update_layout(xaxis_title="Epoch", yaxis_title="Loss")
         st.plotly_chart(fig1)
 
         st.subheader("✅ Accuracy vs Epoch")
         fig2 = go.Figure()
-        fig2.add_trace(go.Scatter(x=epochs, y=st.session_state.acc, mode="lines+markers", name="Accuracy"))
+        fig2.add_trace(go.Scatter(x=epochs, y=acc, mode="lines+markers", name="Accuracy"))
         fig2.update_layout(xaxis_title="Epoch", yaxis_title="Accuracy")
         st.plotly_chart(fig2)
 
-    # 리셋 버튼
     if reset:
-        st.session_state.loss = []
-        st.session_state.acc = []
         st.rerun()
