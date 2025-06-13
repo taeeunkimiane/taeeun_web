@@ -7,4 +7,3 @@ plotly
 koreanize_matplotlib
 torch
 torchvision
-
