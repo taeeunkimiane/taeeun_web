@@ -34,7 +34,7 @@ def train_model(optimizer_name, lr, beta1, beta2, weight_decay, epochs=5):
     optimizer = optimizer_dict[optimizer_name]
 
     transform = transforms.ToTensor()
-    train_data = datasets.MNIST(root="./data", train=True, download=True, transform=transform)
+    train_data = datasets.MNIST(root="/home/appuser/.cache", train=True, download=True, transform=transform)
     train_loader = DataLoader(train_data, batch_size=64, shuffle=True)
 
     loss_list = []
