@@ -27,7 +27,7 @@ def apply_log(img, sigma):
 
 # Streamlit 앱 함수
 def app():
-    st.title("2️⃣ 윤곽선 필터 시뮬레이터")
+    st.title("3️⃣윤곽선 필터 시뮬레이터")
     st.markdown("""
     업로드한 이미지에 대해 가우시안 필터를 적용하고, DoG/LoG 기반 윤곽선을 시각화합니다.
     """)

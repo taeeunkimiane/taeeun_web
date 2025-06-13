@@ -1,10 +1,9 @@
 # optimization/optimization.py 내부
-
-from . import optimization_energy
-from . import optimization_hw
-from . import optimization_memory
-from . import optimization_selflearning
-from . import optimization_vision
+from pages.optimization import optimization_hw
+from pages.optimization import optimization_energy
+from pages.optimization import optimization_memory
+from pages.optimization import optimization_selflearning
+from pages.optimization import optimization_vision
 
 modules = {
     "1. 물리적 하드웨어": optimization_hw.run,

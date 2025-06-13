@@ -23,7 +23,7 @@ def calculate_energy(v, motion_type, piezo=True, regen=True):
 
 # 시뮬레이터 UI 정의
 def app():
-    st.title("3️⃣ 에너지 회수 시뮬레이터")
+    st.title("2️⃣  에너지 회수 시뮬레이터")
     st.markdown("""
     로봇의 동작 방식, 속도, 회로 조합에 따라 회수 가능한 에너지를 시뮬레이션합니다.
     """)
@@ -59,4 +59,3 @@ def app():
     voltage = 7.4  # V
     recovered_wh = energy / 3600 * voltage  # J → Wh 변환
     st.write(f"예상 회수 에너지는 약 {recovered_wh:.3f} Wh 로, 배터리 지속시간을 소폭 연장할 수 있습니다.")
-
