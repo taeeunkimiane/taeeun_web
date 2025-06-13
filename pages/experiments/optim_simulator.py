@@ -7,6 +7,10 @@ from torch.utils.data import DataLoader
 from torchvision import datasets, transforms
 import plotly.graph_objs as go
 
+import streamlit as st
+
+st.set_page_config(page_title="최적화 시뮬레이터", layout="wide")
+
 # ✅ MLP 모델 정의
 class SimpleMLP(nn.Module):
     def __init__(self):
