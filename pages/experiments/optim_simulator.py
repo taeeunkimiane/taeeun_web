@@ -100,7 +100,7 @@ def app():
         st.plotly_chart(fig2)
 
     if reset:
-        st.experimental_rerun()
+        st.rerun()
 
 
 
